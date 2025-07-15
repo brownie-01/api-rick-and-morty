@@ -4,11 +4,11 @@ import rickPic from '../assets/rick.jpg'
 
 function HomePage() {
   return (
-    <div>
+    <div className='flex-center'>
         <h1>Bienvenido a la app de rick y morty</h1>
         <p> Explora todos los personajes del universo de rick y morty </p>
         <Link to="/characters" >
-        Ver personajes
+        <button>Ver personajes</button>
         </Link>
         <br />
         <img width='800px' src={rickPic} alt="rick" />

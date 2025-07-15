@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,8 +22,8 @@ function Characters({ characters }) {
                 <img src={character.image} alt={character.name} />
                 <div className='card-body'>
                     <h5 className='card-title' > {character.name} </h5>
-                    <p className='card-text' > {character.status} </p>
-                    <p className='card-text' > {character.species} </p>
+                    <p className='card-text' > Status: {character.status} </p>
+                    <p className='card-text' > Species: {character.species} </p>
                     <p className='card-text' > {character.location.name} </p>
                 </div>
                 </div>
