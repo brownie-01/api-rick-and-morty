@@ -4,6 +4,7 @@ const useRickAndMortyApi = () => {
     //Estados
     const [characters, setCharacters] = useState([])
     const [info, setInfo] = useState({})
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -43,13 +44,30 @@ const useRickAndMortyApi = () => {
     //si no manejamos bien la ejecucion podriamos tener un bucle infinito
 
     useEffect(() => {
-        if(initialUrl) {
-            fetchCharacters(initialUrl)
-        } else {
-            setError(new Error("El env que contiene el enlace a la api no esta definido en las variables de entorno"))
-            setLoading(false)
+        if (!initialUrl) {
+            setError(new Error("La URL de la API no está definida en las variables de entorno."));
+            setLoading(false);
+            return;
         }
-    }, [initialUrl])
+        if (!searchTerm) {
+             fetchCharacters(initialUrl);
+        }
+    }, [initialUrl, searchTerm]);
+
+        // --- SEGUNDO useEffect: Manejo del Buscador con Debounce ---
+    useEffect(() => {
+        // Solo ejecuta la búsqueda si hay un searchTerm
+        if (searchTerm) {
+            const handler = setTimeout(() => {
+                const searchUrl = `${initialUrl}/?name=${searchTerm}`;
+                fetchCharacters(searchUrl);
+            }, 500); // Debounce de 500ms
+
+            return () => {
+                clearTimeout(handler); // Limpia el timeout si el searchTerm cambia rápidamente
+            };
+        }
+    }, [searchTerm, initialUrl]);
 
     //Manejar la paginacion
     const onPrevious = () => {
@@ -69,6 +87,8 @@ const useRickAndMortyApi = () => {
         info,
         loading,
         error,
+        searchTerm,
+        setSearchTerm,
         onPrevious,
         onNext,
     }
