@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 
 const useRickAndMortyApi = () => {
-    //Estados
     const [characters, setCharacters] = useState([])
     const [info, setInfo] = useState({})
     const [searchTerm, setSearchTerm] = useState('');
@@ -11,19 +10,13 @@ const useRickAndMortyApi = () => {
     //consumimos nuestra variable de entorno
     const initialUrl = import.meta.env.VITE_RICK_AND_MORTY_API_URL
 
-    // fetch (asincronismo) -> funcion que permite utilizar HTTP
-    // reemplazos de fetch -> axios, reactQuery
-
     const fetchCharacters = async (url) => {
         setLoading(true)
         setError(null)
         //intentamos ejecutar nuestra logica
         try {
-            // en este caso fetch utiliza solo GET
             const response = await fetch(url)
-            //validamos que no haya error en la consulta a la api
             if(!response.ok){
-                //throw funciona como el retorno - finaliza la ejecucion
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             // en data obtendremos los datos del json pero en js (como array y objetos)
@@ -40,8 +33,6 @@ const useRickAndMortyApi = () => {
         }
     }
 
-    //Necesitamos tener un llamado a la api con un fetch inicial
-    //si no manejamos bien la ejecucion podriamos tener un bucle infinito
 
     useEffect(() => {
         if (!initialUrl) {
@@ -56,15 +47,14 @@ const useRickAndMortyApi = () => {
 
         // --- SEGUNDO useEffect: Manejo del Buscador con Debounce ---
     useEffect(() => {
-        // Solo ejecuta la búsqueda si hay un searchTerm
         if (searchTerm) {
             const handler = setTimeout(() => {
                 const searchUrl = `${initialUrl}/?name=${searchTerm}`;
                 fetchCharacters(searchUrl);
-            }, 500); // Debounce de 500ms
+            }, 500);
 
             return () => {
-                clearTimeout(handler); // Limpia el timeout si el searchTerm cambia rápidamente
+                clearTimeout(handler);
             };
         }
     }, [searchTerm, initialUrl]);
